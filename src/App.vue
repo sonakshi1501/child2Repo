@@ -1,84 +1,74 @@
 <template>
   <v-app>
     <v-main>
-      <h1>User Table:Child 2</h1>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto delectus libero cupiditate, tempora debitis nobis temporibus repellendus nam atque eveniet saepe quos ea! Libero non odit odio qui itaque alias!</p>
-      <v-table>
+<v-container>
+  <v-row>
+    <v-col>
+      <h1>Github User Api</h1>
+    </v-col>
+  </v-row>
+  <v-row v-if="!users.length>0">
+    <v-col class="text-center">
+      <v-progress-circular
+      :size="70"
+      :width="7"
+      color="primary"
+      indeterminate
+    ></v-progress-circular>
+    </v-col>
+  </v-row>
+  <v-row v-else>
+    <v-col md="3" v-for="(item,index) in users" :key="index">
+      <v-card
+    class="mx-auto"
+    max-width="400"
+  >
+    <v-img
+      class="white--text align-end"
+      height="200px"
+      :src="item.avatar_url"
+      cover
+    >
+    </v-img>
+      <v-card-title class="mb-0">{{item.login}}</v-card-title>
 
-    <template v-slot:default>
-      <thead>
-        <tr>
-          <th class="text-left">
-            Name
-          </th>
-          <th class="text-left">
-            Calories
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="item in desserts"
-          :key="item.name"
-        >
-          <td>{{ item.name }}</td>
-          <td>{{ item.calories }}</td>
-        </tr>
-      </tbody>
-    </template>
-  </v-table>
-      
+
+    <v-card-actions>
+      <v-btn
+        color="orange"
+        variant="text"
+        :href="item.html_url"
+        target="_blank"
+      >
+      Github Profile
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+    </v-col>
+  </v-row>
+</v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        desserts: [
-          {
-            name: 'Frozen Yogurt',
-            calories: 159,
-          },
-          {
-            name: 'Ice cream sandwich',
-            calories: 237,
-          },
-          {
-            name: 'Eclair',
-            calories: 262,
-          },
-          {
-            name: 'Cupcake',
-            calories: 305,
-          },
-          {
-            name: 'Gingerbread',
-            calories: 356,
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
-          },
-        ],
-      }
-    },
+export default {
+  data() {
+    return {
+      users:[]
+    }
+    
+  },
+  mounted(){
+    this.getData()
+  },
+  methods:{
+    getData(){
+      fetch("https://api.github.com/users").then(res=>res.json()).then(data=>{
+      this.users=data
+
+      }).catch(e=>{console.log(e)})
+    }
   }
+};
 </script>
